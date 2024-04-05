@@ -8,21 +8,29 @@ using System.Data;
 using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
+using System.ComponentModel;
 
 namespace DataBaseWorker
 {
     public static class DataBaseAplication
     {
         private const string BaseConnection = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=";
+        /// <summary>
+        /// Строка подключения
+        /// </summary>
         public static string ConnectionString { get; set; }
         private static OleDbConnection conection = new OleDbConnection();
-
+        private static OleDbDataAdapter waitoperation = new OleDbDataAdapter();
+        private static DataSet celloperation = new DataSet();
         public static OleDbConnection Connection { get => conection; }
 
+        /// <summary>
+        /// Метод открытия соединения
+        /// </summary>
+        /// <returns>true если успешно</returns>
         public static bool TryOpen()
         {
             conection.ConnectionString = ConnectionString;
-
             try
             {
                 conection.Open();
@@ -35,12 +43,20 @@ namespace DataBaseWorker
 
             return true;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="NameBase"></param>
+        /// <returns>true если успешно</returns>
         public static bool TryOpen(string NameBase)
         {
             ConnectionString = BaseConnection + NameBase;
             return TryOpen();
         }
 
+        /// <summary>
+        /// Модальное окно конструктора соединения
+        /// </summary>
         public static void BuildConnection()
         {
             Form form = new Form();
@@ -117,6 +133,10 @@ namespace DataBaseWorker
                 ConnectionString = string.Format("Provider={0};Data Source={1}", ProviderName1.SelectedItem, DataBaseName1.Text);
         }
 
+        /// <summary>
+        /// Закрывает соединение
+        /// </summary>
+        /// <returns> true если успешно</returns>
         public static bool TryClose()
         {
             if(Connection.State == System.Data.ConnectionState.Open)
@@ -128,7 +148,11 @@ namespace DataBaseWorker
             return false;
         }
 
-
+        /// <summary>
+        /// Совращает таблицу из базы данных
+        /// </summary>
+        /// <param name="NameTable">Имя таблицы</param>
+        /// <returns>Таблица из Базы данных</returns>
         public static DataTable GetDataTable(string NameTable)
         {
             bool closed = Connection.State == ConnectionState.Closed;
@@ -143,15 +167,31 @@ namespace DataBaseWorker
 
             return data.Tables[0];
         }
-
-        public static void AddDataRow(string NameTable, params object[] colums)
+        /// <summary>
+        /// Добавляет строку в базу данных
+        /// </summary>
+        /// <param name="NameTable">Название таблицы</param>
+        /// <param name="values">Значения</param>
+        public static void AddDataRow(string NameTable, params object[] values)
         {
             bool closed = Connection.State == ConnectionState.Closed;
             if (closed) TryOpen();
 
             OleDbDataAdapter adapter = new OleDbDataAdapter($"SELECT * FROM {NameTable}", Connection);
             DataSet data = new DataSet();
-            DataTable table = data.Tables[0];
+            DataTable table = null;
+
+            try
+            {
+                adapter.Fill(data);
+                table = data.Tables[0];
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка операции: " + ex.Message, "Система", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (closed) TryClose();
+                return;
+            }
 
             DataRow row = table.NewRow();
 
@@ -159,8 +199,8 @@ namespace DataBaseWorker
             {
                 for (int i = 0; i < table.Columns.Count; i++)
                 {
-                    if (i < colums.Length)
-                        row[i] = colums[i];
+                    if (i < values.Length)
+                        row[i] = values[i];
                     else
                         row[i] = null;
                 }
@@ -178,7 +218,11 @@ namespace DataBaseWorker
                 if (closed) TryClose();
             }
         }
-
+        /// <summary>
+        /// Удаляет строку из базы данных по параметру
+        /// </summary>
+        /// <param name="NameTable">Название таблицы</param>
+        /// <param name="parametr">Атрибут поиска</param>
         public static void RemoveDataRow(string NameTable, object parametr)
         {
             bool closed = Connection.State == ConnectionState.Closed;
@@ -186,10 +230,23 @@ namespace DataBaseWorker
 
             OleDbDataAdapter adapter = new OleDbDataAdapter($"SELECT * FROM {NameTable}", Connection);
             DataSet data = new DataSet();
-            DataTable table = data.Tables[0];
+            DataTable table = null;
+
             bool equal = false;
 
-            for(int i = 0; i < table.Rows.Count; i++)
+            try
+            {
+                adapter.Fill(data);
+                table = data.Tables[0];
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка операции: " + ex.Message, "Система", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (closed) TryClose();
+                return;
+            }
+
+            for (int i = 0; i < table.Rows.Count; i++)
             {
                 for (int j = 0; j < table.Columns.Count; j++)
                 {
@@ -216,7 +273,11 @@ namespace DataBaseWorker
                 if (closed) TryClose();
             }
         }
-
+        /// <summary>
+        /// Удаляет строку из базы данных по коду
+        /// </summary>
+        /// <param name="NameTable">Название базы данных</param>
+        /// <param name="id">Код строки</param>
         public static void RemoveAtDataRow(string NameTable, int id)
         {
             bool closed = Connection.State == ConnectionState.Closed;
@@ -224,7 +285,19 @@ namespace DataBaseWorker
 
             OleDbDataAdapter adapter = new OleDbDataAdapter($"SELECT * FROM {NameTable}", Connection);
             DataSet data = new DataSet();
-            DataTable table = data.Tables[0];
+            DataTable table = null;
+
+            try
+            {
+                adapter.Fill(data);
+                table = data.Tables[0];
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка операции: " + ex.Message, "Система", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (closed) TryClose();
+                return;
+            }
 
             for (int i = 0; i < table.Rows.Count; i++)
             {
@@ -247,6 +320,61 @@ namespace DataBaseWorker
                 if (closed) TryClose();
             }
         }
+        /// <summary>
+        /// Открывает поток редактирования
+        /// </summary>
+        /// <param name="NameTable">Название таблицы</param>
+        /// <param name="id">Код строки</param>
+        /// <param name="row">Возращаемая строка</param>
+        public static void BeginUpdateDataRow(string NameTable, int id, ref DataRow row)
+        {
+            if (Connection.State == ConnectionState.Closed) TryOpen();
 
+            waitoperation.SelectCommand = new OleDbCommand($"SELECT * FROM {NameTable}", Connection);
+            waitoperation.Fill(celloperation);
+
+            DataTable table = celloperation.Tables[0];
+            foreach(DataRow i in table.Rows)
+            {
+                if (!i[0].Equals(id)) continue;
+                row = i;
+                return;
+            }
+        }
+        /// <summary>
+        /// Завершает процесс редактирования
+        /// </summary>
+        /// <param name="id">Код строки</param>
+        /// <param name="row">Финальная строка</param>
+        public static void EndUpdateDataRow(int id, DataRow row)
+        {
+            if (Connection.State != ConnectionState.Open) return;
+            if(waitoperation == null || celloperation == null) return;
+
+            DataTable table = celloperation.Tables[0];
+            foreach(DataRow i in table.Rows)
+            {
+                if (!i[0].Equals(id)) continue;
+
+                for (int j = 0; j < table.Columns.Count; j++)
+                    i[j] = row[j];
+                break;
+            }
+
+            try
+            {
+                OleDbCommandBuilder builder = new OleDbCommandBuilder(waitoperation);
+                waitoperation.Update(celloperation);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка обновления: " + ex.Message, "Система", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                TryClose();
+            }
+
+        }
     }
 }
