@@ -1,0 +1,6 @@
+D:\Buffer\Libery\DataBaseWorker\bin\Debug\DataBaseWorker.dll
+D:\Buffer\Libery\DataBaseWorker\bin\Debug\DataBaseWorker.pdb
+D:\Buffer\Libery\DataBaseWorker\obj\Debug\DataBaseWorker.csproj.AssemblyReference.cache
+D:\Buffer\Libery\DataBaseWorker\obj\Debug\DataBaseWorker.csproj.CoreCompileInputs.cache
+D:\Buffer\Libery\DataBaseWorker\obj\Debug\DataBaseWorker.dll
+D:\Buffer\Libery\DataBaseWorker\obj\Debug\DataBaseWorker.pdb
