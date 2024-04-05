@@ -4,3 +4,9 @@ D:\Buffer\Libery\DataBaseWorker\obj\Debug\DataBaseWorker.csproj.AssemblyReferenc
 D:\Buffer\Libery\DataBaseWorker\obj\Debug\DataBaseWorker.csproj.CoreCompileInputs.cache
 D:\Buffer\Libery\DataBaseWorker\obj\Debug\DataBaseWorker.dll
 D:\Buffer\Libery\DataBaseWorker\obj\Debug\DataBaseWorker.pdb
+E:\str\Libery\DataBaseWorker\obj\Debug\DataBaseWorker.pdb
+E:\str\Libery\DataBaseWorker\obj\Debug\DataBaseWorker.csproj.AssemblyReference.cache
+E:\str\Libery\DataBaseWorker\obj\Debug\DataBaseWorker.csproj.CoreCompileInputs.cache
+E:\str\Libery\DataBaseWorker\obj\Debug\DataBaseWorker.dll
+E:\str\Libery\DataBaseWorker\bin\Debug\DataBaseWorker.dll
+E:\str\Libery\DataBaseWorker\bin\Debug\DataBaseWorker.pdb
