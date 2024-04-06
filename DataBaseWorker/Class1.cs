@@ -12,23 +12,25 @@ using System.ComponentModel;
 
 namespace DataBaseWorker
 {
-    public static class DataBaseAplication
+    public class DataBaseApplication
     {
         private const string BaseConnection = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=";
         /// <summary>
         /// Строка подключения
         /// </summary>
-        public static string ConnectionString { get; set; }
-        private static OleDbConnection conection = new OleDbConnection();
-        private static OleDbDataAdapter waitoperation = new OleDbDataAdapter();
-        private static DataSet celloperation = new DataSet();
-        public static OleDbConnection Connection { get => conection; }
+        public string ConnectionString { get; set; }
+        private OleDbConnection conection = new OleDbConnection();
+        private OleDbDataAdapter waitoperation = new OleDbDataAdapter();
+        private DataSet celloperation = new DataSet();
+        public OleDbConnection Connection { get => conection; }
+
+        public DataBaseApplication() { }
 
         /// <summary>
         /// Метод открытия соединения
         /// </summary>
         /// <returns>true если успешно</returns>
-        public static bool TryOpen()
+        public bool TryOpen()
         {
             conection.ConnectionString = ConnectionString;
             try
@@ -44,11 +46,11 @@ namespace DataBaseWorker
             return true;
         }
         /// <summary>
-        /// 
+        /// Метод открытия соединения
         /// </summary>
         /// <param name="NameBase"></param>
         /// <returns>true если успешно</returns>
-        public static bool TryOpen(string NameBase)
+        public bool TryOpen(string NameBase)
         {
             ConnectionString = BaseConnection + NameBase;
             return TryOpen();
@@ -57,7 +59,7 @@ namespace DataBaseWorker
         /// <summary>
         /// Модальное окно конструктора соединения
         /// </summary>
-        public static void BuildConnection()
+        public void BuildConnection()
         {
             Form form = new Form();
             form.FormBorderStyle = FormBorderStyle.None;
@@ -137,7 +139,7 @@ namespace DataBaseWorker
         /// Закрывает соединение
         /// </summary>
         /// <returns> true если успешно</returns>
-        public static bool TryClose()
+        public bool TryClose()
         {
             if(Connection.State == System.Data.ConnectionState.Open)
             {
@@ -153,7 +155,7 @@ namespace DataBaseWorker
         /// </summary>
         /// <param name="NameTable">Имя таблицы</param>
         /// <returns>Таблица из Базы данных</returns>
-        public static DataTable GetDataTable(string NameTable)
+        public DataTable GetDataTable(string NameTable)
         {
             bool closed = Connection.State == ConnectionState.Closed;
             if (closed) TryOpen();
@@ -172,7 +174,7 @@ namespace DataBaseWorker
         /// </summary>
         /// <param name="NameTable">Название таблицы</param>
         /// <param name="values">Значения</param>
-        public static void AddDataRow(string NameTable, params object[] values)
+        public void AddDataRow(string NameTable, params object[] values)
         {
             bool closed = Connection.State == ConnectionState.Closed;
             if (closed) TryOpen();
@@ -223,7 +225,7 @@ namespace DataBaseWorker
         /// </summary>
         /// <param name="NameTable">Название таблицы</param>
         /// <param name="parametr">Атрибут поиска</param>
-        public static void RemoveDataRow(string NameTable, object parametr)
+        public void RemoveDataRow(string NameTable, object parametr)
         {
             bool closed = Connection.State == ConnectionState.Closed;
             if (closed) TryOpen();
@@ -278,7 +280,7 @@ namespace DataBaseWorker
         /// </summary>
         /// <param name="NameTable">Название базы данных</param>
         /// <param name="id">Код строки</param>
-        public static void RemoveAtDataRow(string NameTable, int id)
+        public void RemoveAtDataRow(string NameTable, int id)
         {
             bool closed = Connection.State == ConnectionState.Closed;
             if (closed) TryOpen();
@@ -326,7 +328,7 @@ namespace DataBaseWorker
         /// <param name="NameTable">Название таблицы</param>
         /// <param name="id">Код строки</param>
         /// <param name="row">Возращаемая строка</param>
-        public static void BeginUpdateDataRow(string NameTable, int id, ref DataRow row)
+        public void BeginUpdateDataRowAt(string NameTable, int id, ref DataRow row)
         {
             if (Connection.State == ConnectionState.Closed) TryOpen();
 
@@ -344,9 +346,8 @@ namespace DataBaseWorker
         /// <summary>
         /// Завершает процесс редактирования
         /// </summary>
-        /// <param name="id">Код строки</param>
         /// <param name="row">Финальная строка</param>
-        public static void EndUpdateDataRow(int id, DataRow row)
+        public void EndUpdateDataRowAt(DataRow row)
         {
             if (Connection.State != ConnectionState.Open) return;
             if(waitoperation == null || celloperation == null) return;
@@ -354,7 +355,7 @@ namespace DataBaseWorker
             DataTable table = celloperation.Tables[0];
             foreach(DataRow i in table.Rows)
             {
-                if (!i[0].Equals(id)) continue;
+                if (!i[0].Equals(row[0])) continue;
 
                 for (int j = 0; j < table.Columns.Count; j++)
                     i[j] = row[j];
@@ -373,6 +374,76 @@ namespace DataBaseWorker
             finally
             {
                 TryClose();
+                waitoperation.SelectCommand.Dispose();
+                celloperation.Dispose();
+                celloperation = new DataSet();
+            }
+
+        }
+        /// <summary>
+        /// Открывает поток редактирования
+        /// </summary>
+        /// <param name="NameTable">Название таблицы</param>
+        /// <param name="val">Парамантр поиска записи</param>
+        /// <param name="row">Строка редактирования</param>
+        public void BeginUpdateDataRow(string NameTable, object val, ref DataRow row)
+        {
+            if (Connection.State == ConnectionState.Closed) TryOpen();
+
+            waitoperation.SelectCommand = new OleDbCommand($"SELECT * FROM {NameTable}", Connection);
+            waitoperation.Fill(celloperation);
+
+            DataTable table = celloperation.Tables[0];
+            foreach (DataRow i in table.Rows)
+            {
+                for (int j = 0; j < table.Columns.Count; j++)
+                {
+                    if (!i[j].Equals(val)) continue;
+                    row = i;
+                    return;
+                }
+            }
+        }
+        /// <summary>
+        /// Завершает поток редактирования
+        /// </summary>
+        /// <param name="row">Строка редактирования</param>
+        public void EndUpdateDataRow(DataRow row)
+        {
+            if (Connection.State != ConnectionState.Open) return;
+            if (waitoperation == null || celloperation == null) return;
+
+            DataTable table = celloperation.Tables[0];
+            bool equal = false;
+            foreach (DataRow i in table.Rows)
+            {
+                for (int i1 = 0; i1 < table.Columns.Count; i1++)
+                {
+                    equal = i[i1].Equals(row[i1]);
+                    if (!equal) continue;
+
+                    for (int j = 0; j < table.Columns.Count; j++)
+                        i[j] = row[j];
+                    break;
+                }
+                if (equal) break;
+            }
+
+            try
+            {
+                OleDbCommandBuilder builder = new OleDbCommandBuilder(waitoperation);
+                waitoperation.Update(celloperation);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка обновления: " + ex.Message, "Система", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                TryClose();
+                waitoperation.SelectCommand.Dispose();
+                celloperation.Dispose();
+                celloperation = new DataSet();
             }
 
         }
