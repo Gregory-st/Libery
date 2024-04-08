@@ -19,6 +19,7 @@ namespace DataBaseWorker
         /// Строка подключения
         /// </summary>
         public string ConnectionString { get; set; }
+
         private OleDbConnection conection = new OleDbConnection();
         private OleDbDataAdapter waitoperation = new OleDbDataAdapter();
         private DataSet celloperation = new DataSet();
@@ -344,43 +345,6 @@ namespace DataBaseWorker
             }
         }
         /// <summary>
-        /// Завершает процесс редактирования
-        /// </summary>
-        /// <param name="row">Финальная строка</param>
-        public void EndUpdateDataRowAt(DataRow row)
-        {
-            if (Connection.State != ConnectionState.Open) return;
-            if(waitoperation == null || celloperation == null) return;
-
-            DataTable table = celloperation.Tables[0];
-            foreach(DataRow i in table.Rows)
-            {
-                if (!i[0].Equals(row[0])) continue;
-
-                for (int j = 0; j < table.Columns.Count; j++)
-                    i[j] = row[j];
-                break;
-            }
-
-            try
-            {
-                OleDbCommandBuilder builder = new OleDbCommandBuilder(waitoperation);
-                waitoperation.Update(celloperation);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Ошибка обновления: " + ex.Message, "Система", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                TryClose();
-                waitoperation.SelectCommand.Dispose();
-                celloperation.Dispose();
-                celloperation = new DataSet();
-            }
-
-        }
-        /// <summary>
         /// Открывает поток редактирования
         /// </summary>
         /// <param name="NameTable">Название таблицы</param>
@@ -407,27 +371,10 @@ namespace DataBaseWorker
         /// <summary>
         /// Завершает поток редактирования
         /// </summary>
-        /// <param name="row">Строка редактирования</param>
-        public void EndUpdateDataRow(DataRow row)
+        public void EndUpdateDataRow()
         {
             if (Connection.State != ConnectionState.Open) return;
             if (waitoperation == null || celloperation == null) return;
-
-            DataTable table = celloperation.Tables[0];
-            bool equal = false;
-            foreach (DataRow i in table.Rows)
-            {
-                for (int i1 = 0; i1 < table.Columns.Count; i1++)
-                {
-                    equal = i[i1].Equals(row[i1]);
-                    if (!equal) continue;
-
-                    for (int j = 0; j < table.Columns.Count; j++)
-                        i[j] = row[j];
-                    break;
-                }
-                if (equal) break;
-            }
 
             try
             {
@@ -446,6 +393,48 @@ namespace DataBaseWorker
                 celloperation = new DataSet();
             }
 
+        }
+        /// <summary>
+        /// Обновляет все Id в таблице базы данных
+        /// </summary>
+        /// <param name="NameTable">Название таблицы</param>
+        public void RefreshIdDataTable(string NameTable)
+        {
+            bool closed = Connection.State == ConnectionState.Closed;
+            if (closed) TryOpen();
+
+            OleDbDataAdapter adapter = new OleDbDataAdapter($"SELECT * FROM {NameTable}", Connection);
+            DataSet data = new DataSet();
+            DataTable table = null;
+
+            try
+            {
+                adapter.Fill(data);
+                table = data.Tables[0];
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка операции: " + ex.Message, "Система", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (closed) TryClose();
+                return;
+            }
+
+            for(int i = 0; i < table.Rows.Count; i++)
+                table.Rows[i][0] = i + 1;
+
+            try
+            {
+                OleDbCommandBuilder builder = new OleDbCommandBuilder(adapter);
+                adapter.Update(data);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка удаления: " + ex.Message, "Система", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (closed) TryClose();
+            }
         }
     }
 }

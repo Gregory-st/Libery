@@ -10,3 +10,9 @@ E:\str\Libery\DataBaseWorker\obj\Debug\DataBaseWorker.csproj.CoreCompileInputs.c
 E:\str\Libery\DataBaseWorker\obj\Debug\DataBaseWorker.dll
 E:\str\Libery\DataBaseWorker\bin\Debug\DataBaseWorker.dll
 E:\str\Libery\DataBaseWorker\bin\Debug\DataBaseWorker.pdb
+D:\Buffer\Library\DataBaseWorker\bin\Debug\DataBaseWorker.dll
+D:\Buffer\Library\DataBaseWorker\bin\Debug\DataBaseWorker.pdb
+D:\Buffer\Library\DataBaseWorker\obj\Debug\DataBaseWorker.csproj.AssemblyReference.cache
+D:\Buffer\Library\DataBaseWorker\obj\Debug\DataBaseWorker.csproj.CoreCompileInputs.cache
+D:\Buffer\Library\DataBaseWorker\obj\Debug\DataBaseWorker.dll
+D:\Buffer\Library\DataBaseWorker\obj\Debug\DataBaseWorker.pdb
