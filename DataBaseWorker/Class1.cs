@@ -37,7 +37,7 @@ namespace DataBaseWorker
         public DataBaseApplication() { }
 
         /// <summary>
-        /// Open connect
+        /// Метод открытия соединения
         /// </summary>
         /// <returns>true если успешно</returns>
         public bool TryOpen()
