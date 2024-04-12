@@ -16,3 +16,12 @@ D:\Buffer\Library\DataBaseWorker\obj\Debug\DataBaseWorker.csproj.AssemblyReferen
 D:\Buffer\Library\DataBaseWorker\obj\Debug\DataBaseWorker.csproj.CoreCompileInputs.cache
 D:\Buffer\Library\DataBaseWorker\obj\Debug\DataBaseWorker.dll
 D:\Buffer\Library\DataBaseWorker\obj\Debug\DataBaseWorker.pdb
+E:\str\Library\DataBaseWorker\bin\Debug\DataBaseWorker.dll
+E:\str\Library\DataBaseWorker\bin\Debug\DataBaseWorker.pdb
+E:\str\Library\DataBaseWorker\obj\Debug\DataBaseWorker.csproj.AssemblyReference.cache
+E:\str\Library\DataBaseWorker\obj\Debug\DataBaseWorker.csproj.CoreCompileInputs.cache
+E:\str\Library\DataBaseWorker\obj\Debug\DataBaseWorker.dll
+E:\str\Library\DataBaseWorker\obj\Debug\DataBaseWorker.pdb
+E:\str\Library\DataBaseWorker\bin\Debug\DataBaseWorker.xml
+E:\str\Library\DataBaseWorker\obj\Debug\DataBaseWorker.Properties.Resources.resources
+E:\str\Library\DataBaseWorker\obj\Debug\DataBaseWorker.csproj.GenerateResource.cache

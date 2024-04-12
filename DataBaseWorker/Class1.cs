@@ -12,6 +12,9 @@ using System.ComponentModel;
 
 namespace DataBaseWorker
 {
+    /// <summary>
+    /// Класс работы с базой данных
+    /// </summary>
     public class DataBaseApplication
     {
         private const string BaseConnection = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=";
@@ -23,12 +26,18 @@ namespace DataBaseWorker
         private OleDbConnection conection = new OleDbConnection();
         private OleDbDataAdapter waitoperation = new OleDbDataAdapter();
         private DataSet celloperation = new DataSet();
+        /// <summary>
+        /// Возращает соединение с базой данных
+        /// </summary>
         public OleDbConnection Connection { get => conection; }
 
+        /// <summary>
+        /// Конструктор по умолчанию
+        /// </summary>
         public DataBaseApplication() { }
 
         /// <summary>
-        /// Метод открытия соединения
+        /// Open connect
         /// </summary>
         /// <returns>true если успешно</returns>
         public bool TryOpen()

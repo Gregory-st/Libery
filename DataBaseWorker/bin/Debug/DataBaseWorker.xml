@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DataBaseWorker</name>
+    </assembly>
+    <members>
+        <member name="T:DataBaseWorker.DataBaseApplication">
+            <summary>
+            Класс работы с базой данных
+            </summary>
+        </member>
+        <member name="P:DataBaseWorker.DataBaseApplication.ConnectionString">
+            <summary>
+            Строка подключения
+            </summary>
+        </member>
+        <member name="P:DataBaseWorker.DataBaseApplication.Connection">
+            <summary>
+            Возращает соединение с базой данных
+            </summary>
+        </member>
+        <member name="M:DataBaseWorker.DataBaseApplication.#ctor">
+            <summary>
+            Конструктор по умолчанию
+            </summary>
+        </member>
+        <member name="M:DataBaseWorker.DataBaseApplication.TryOpen">
+            <summary>
+            Open connect
+            </summary>
+            <returns>true если успешно</returns>
+        </member>
+        <member name="M:DataBaseWorker.DataBaseApplication.TryOpen(System.String)">
+            <summary>
+            Метод открытия соединения
+            </summary>
+            <param name="NameBase"></param>
+            <returns>true если успешно</returns>
+        </member>
+        <member name="M:DataBaseWorker.DataBaseApplication.BuildConnection">
+            <summary>
+            Модальное окно конструктора соединения
+            </summary>
+        </member>
+        <member name="M:DataBaseWorker.DataBaseApplication.TryClose">
+            <summary>
+            Закрывает соединение
+            </summary>
+            <returns> true если успешно</returns>
+        </member>
+        <member name="M:DataBaseWorker.DataBaseApplication.GetDataTable(System.String)">
+            <summary>
+            Совращает таблицу из базы данных
+            </summary>
+            <param name="NameTable">Имя таблицы</param>
+            <returns>Таблица из Базы данных</returns>
+        </member>
+        <member name="M:DataBaseWorker.DataBaseApplication.AddDataRow(System.String,System.Object[])">
+            <summary>
+            Добавляет строку в базу данных
+            </summary>
+            <param name="NameTable">Название таблицы</param>
+            <param name="values">Значения</param>
+        </member>
+        <member name="M:DataBaseWorker.DataBaseApplication.RemoveDataRow(System.String,System.Object)">
+            <summary>
+            Удаляет строку из базы данных по параметру
+            </summary>
+            <param name="NameTable">Название таблицы</param>
+            <param name="parametr">Атрибут поиска</param>
+        </member>
+        <member name="M:DataBaseWorker.DataBaseApplication.RemoveAtDataRow(System.String,System.Int32)">
+            <summary>
+            Удаляет строку из базы данных по коду
+            </summary>
+            <param name="NameTable">Название базы данных</param>
+            <param name="id">Код строки</param>
+        </member>
+        <member name="M:DataBaseWorker.DataBaseApplication.BeginUpdateDataRowAt(System.String,System.Int32,System.Data.DataRow@)">
+            <summary>
+            Открывает поток редактирования
+            </summary>
+            <param name="NameTable">Название таблицы</param>
+            <param name="id">Код строки</param>
+            <param name="row">Возращаемая строка</param>
+        </member>
+        <member name="M:DataBaseWorker.DataBaseApplication.BeginUpdateDataRow(System.String,System.Object,System.Data.DataRow@)">
+            <summary>
+            Открывает поток редактирования
+            </summary>
+            <param name="NameTable">Название таблицы</param>
+            <param name="val">Парамантр поиска записи</param>
+            <param name="row">Строка редактирования</param>
+        </member>
+        <member name="M:DataBaseWorker.DataBaseApplication.EndUpdateDataRow">
+            <summary>
+            Завершает поток редактирования
+            </summary>
+        </member>
+        <member name="M:DataBaseWorker.DataBaseApplication.RefreshIdDataTable(System.String)">
+            <summary>
+            Обновляет все Id в таблице базы данных
+            </summary>
+            <param name="NameTable">Название таблицы</param>
+        </member>
+        <member name="T:DataBaseWorker.Properties.Resources">
+            <summary>
+              Класс ресурса со строгой типизацией для поиска локализованных строк и т.д.
+            </summary>
+        </member>
+        <member name="P:DataBaseWorker.Properties.Resources.ResourceManager">
+            <summary>
+              Возвращает кэшированный экземпляр ResourceManager, использованный этим классом.
+            </summary>
+        </member>
+        <member name="P:DataBaseWorker.Properties.Resources.Culture">
+            <summary>
+              Перезаписывает свойство CurrentUICulture текущего потока для всех
+              обращений к ресурсу с помощью этого класса ресурса со строгой типизацией.
+            </summary>
+        </member>
+    </members>
+</doc>
