@@ -1,0 +1,6 @@
+D:\Buffer\Library\ControlsWorker\bin\Debug\ControlsWorker.dll
+D:\Buffer\Library\ControlsWorker\bin\Debug\ControlsWorker.pdb
+D:\Buffer\Library\ControlsWorker\obj\Debug\ControlsWorker.csproj.AssemblyReference.cache
+D:\Buffer\Library\ControlsWorker\obj\Debug\ControlsWorker.csproj.CoreCompileInputs.cache
+D:\Buffer\Library\ControlsWorker\obj\Debug\ControlsWorker.dll
+D:\Buffer\Library\ControlsWorker\obj\Debug\ControlsWorker.pdb
