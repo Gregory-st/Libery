@@ -45,11 +45,13 @@ namespace ControlsWorker
 
             foreach(Control i in prototype.Controls)
             {
-                
-
+                if (i is Button button)
+                    instance.Controls.Add(CloneElement(button));
+                else if (i is TextBox textBox)
+                    instance.Controls.Add(CloneElement(textBox));
             }
 
-            return null;
+            return instance;
         }
     }
 }
