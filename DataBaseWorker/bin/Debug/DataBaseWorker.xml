@@ -26,7 +26,7 @@
         </member>
         <member name="M:DataBaseWorker.DataBaseApplication.TryOpen">
             <summary>
-            Open connect
+            Метод открытия соединения
             </summary>
             <returns>true если успешно</returns>
         </member>

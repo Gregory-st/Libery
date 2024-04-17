@@ -311,11 +311,26 @@ namespace DataBaseWorker
                 return;
             }
 
-            for (int i = 0; i < table.Rows.Count; i++)
+            int low = 0;
+            int higth = table.Rows.Count - 1;
+            int mid = 0;
+            int value = 0;
+
+            while (low <= higth)
             {
-                if ((int)table.Rows[i][0] != id) continue;
-                table.Rows[i].Delete();
-                break;
+                mid = (low + higth) / 2;
+                value = (int)table.Rows[mid][0];
+
+                if (value == id)
+                {
+                    table.Rows[mid].Delete();
+                    break;
+                }
+
+                if (value < id)
+                    low = mid + 1;
+                else
+                    higth = mid - 1;
             }
 
             try
@@ -346,11 +361,26 @@ namespace DataBaseWorker
             waitoperation.Fill(celloperation);
 
             DataTable table = celloperation.Tables[0];
-            foreach(DataRow i in table.Rows)
+            int low = 0;
+            int higth = table.Rows.Count - 1;
+            int mid = 0;
+            int value = 0;
+
+            while (low <= higth)
             {
-                if (!i[0].Equals(id)) continue;
-                row = i;
-                return;
+                mid = (low + higth) / 2;
+                value = (int)table.Rows[mid][0];
+
+                if (value == id)
+                {
+                    row = table.Rows[mid];
+                    return;
+                }
+
+                if (value < id)
+                    low = mid + 1;
+                else
+                    higth = mid - 1;
             }
         }
         /// <summary>
@@ -428,8 +458,11 @@ namespace DataBaseWorker
                 return;
             }
 
-            for(int i = 0; i < table.Rows.Count; i++)
+            for (int i = 0; i < table.Rows.Count; i++)
+            {
+                if ((int)table.Rows[i][0] == (i + 1)) continue;
                 table.Rows[i][0] = i + 1;
+            }
 
             try
             {

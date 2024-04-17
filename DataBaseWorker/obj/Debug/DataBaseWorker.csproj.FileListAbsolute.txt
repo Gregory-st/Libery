@@ -25,3 +25,6 @@ E:\str\Library\DataBaseWorker\obj\Debug\DataBaseWorker.pdb
 E:\str\Library\DataBaseWorker\bin\Debug\DataBaseWorker.xml
 E:\str\Library\DataBaseWorker\obj\Debug\DataBaseWorker.Properties.Resources.resources
 E:\str\Library\DataBaseWorker\obj\Debug\DataBaseWorker.csproj.GenerateResource.cache
+D:\Buffer\Library\DataBaseWorker\bin\Debug\DataBaseWorker.xml
+D:\Buffer\Library\DataBaseWorker\obj\Debug\DataBaseWorker.Properties.Resources.resources
+D:\Buffer\Library\DataBaseWorker\obj\Debug\DataBaseWorker.csproj.GenerateResource.cache
