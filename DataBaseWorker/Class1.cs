@@ -23,8 +23,8 @@ namespace DataBaseWorker
         /// </summary>
         public string ConnectionString { get; set; }
 
-        private OleDbConnection conection = new OleDbConnection();
-        private OleDbDataAdapter waitoperation = new OleDbDataAdapter();
+        private readonly OleDbConnection conection = new OleDbConnection();
+        private readonly OleDbDataAdapter waitoperation = new OleDbDataAdapter();
         private DataSet celloperation = new DataSet();
         /// <summary>
         /// Возращает соединение с базой данных
@@ -71,10 +71,12 @@ namespace DataBaseWorker
         /// </summary>
         public void BuildConnection()
         {
-            Form form = new Form();
-            form.FormBorderStyle = FormBorderStyle.None;
-            form.StartPosition = FormStartPosition.CenterScreen;
-            form.Size = new Size(500, 300);
+            Form form = new Form
+            {
+                FormBorderStyle = FormBorderStyle.None,
+                StartPosition = FormStartPosition.CenterScreen,
+                Size = new Size(500, 300)
+            };
 
             TextBox DataBaseName1 = new TextBox();
             ComboBox ProviderName1 = new ComboBox();
@@ -191,8 +193,7 @@ namespace DataBaseWorker
 
             OleDbDataAdapter adapter = new OleDbDataAdapter($"SELECT * FROM {NameTable}", Connection);
             DataSet data = new DataSet();
-            DataTable table = null;
-
+            DataTable table;
             try
             {
                 adapter.Fill(data);
@@ -242,10 +243,9 @@ namespace DataBaseWorker
 
             OleDbDataAdapter adapter = new OleDbDataAdapter($"SELECT * FROM {NameTable}", Connection);
             DataSet data = new DataSet();
-            DataTable table = null;
-
             bool equal = false;
 
+            DataTable table;
             try
             {
                 adapter.Fill(data);
@@ -297,8 +297,7 @@ namespace DataBaseWorker
 
             OleDbDataAdapter adapter = new OleDbDataAdapter($"SELECT * FROM {NameTable}", Connection);
             DataSet data = new DataSet();
-            DataTable table = null;
-
+            DataTable table;
             try
             {
                 adapter.Fill(data);
@@ -477,6 +476,61 @@ namespace DataBaseWorker
             {
                 if (closed) TryClose();
             }
+        }
+        /// <summary>
+        /// Возвращает таблицу по условию отбора
+        /// </summary>
+        /// <param name="Name">Название таблицы</param>
+        /// <param name="Args">Условия отбора</param>
+        /// <returns></returns>
+        public DataTable GetDataTableOn(string Name, string Args)
+        {
+            bool IsClosed = Connection.State == ConnectionState.Closed;
+            if (IsClosed) TryOpen();
+
+            try
+            {
+                OleDbDataAdapter adapter = new OleDbDataAdapter($"SELECT * FROM {Name} WHERE {Args}", Connection);
+                DataSet data = new DataSet();
+                adapter.Fill(data);
+                return data.Tables[0];
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошика: " + ex.Message, "Система", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (IsClosed) TryClose();
+            }
+            return null;
+        }
+        /// <summary>
+        /// Возвращает таблицу по условию отбора
+        /// </summary>
+        /// <param name="Command">Комманда выборки</param>
+        /// <returns></returns>
+        public DataTable GetDataTableOn(string Command)
+        {
+            bool IsClosed = Connection.State == ConnectionState.Closed;
+            if (IsClosed) TryOpen();
+
+            try
+            {
+                OleDbDataAdapter adapter = new OleDbDataAdapter(Command, Connection);
+                DataSet data = new DataSet();
+                adapter.Fill(data);
+                return data.Tables[0];
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошика: " + ex.Message, "Система", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (IsClosed) TryClose();
+            }
+            return null;
         }
     }
 }
